@@ -204,6 +204,7 @@
             padding: 2.2rem;
             position: relative;
             box-shadow: 0 0 40px var(--accent-violet-glow);
+            text-align: center;
         }
 
         .close-btn {
@@ -217,40 +218,117 @@
             cursor: pointer;
         }
 
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.4rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
+        .selected-tier-box {
             background: #090712;
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 0.95rem;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
-        .btn-gold {
-            background: linear-gradient(135deg, #f59e0b, #b45309);
-            color: #0f0f13;
-            border: none;
-            padding: 0.8rem;
-            border-radius: 10px;
+        .modal-instructions {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-ig-dm {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #e1306c, #c13584, #833ab4);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 1.5rem;
+            border-radius: 12px;
             font-weight: 800;
-            cursor: pointer;
+            font-size: 1.05rem;
             width: 100%;
+            box-shadow: 0 4px 18px rgba(225, 48, 108, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-ig-dm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(225, 48, 108, 0.6);
+        }
+
+        /* Footer Section */
+        footer {
+            margin-top: 4rem;
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            background: rgba(22, 19, 36, 0.6);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-link:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            transform: translateY(-2px);
             box-shadow: 0 4px 15px var(--accent-gold-glow);
+        }
+
+        .cashapp-tag {
+            color: #00D632;
+            border-color: rgba(0, 214, 50, 0.3);
+        }
+
+        .cashapp-tag:hover {
+            border-color: #00D632;
+            color: #00D632;
+            box-shadow: 0 4px 15px rgba(0, 214, 50, 0.3);
+        }
+
+        .inquiry-note {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .inquiry-note a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .inquiry-note a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -265,43 +343,43 @@
         <!-- Cards will automatically generate here from the list below -->
     </main>
 
-    <!-- Commission Request Modal -->
+    <!-- Footer Section with Links and Note -->
+    <footer>
+        <div class="social-links">
+            <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer" class="social-link">
+                📸 Instagram
+            </a>
+            <a href="https://www.tiktok.com/@doctorsickle" target="_blank" rel="noopener noreferrer" class="social-link">
+                📸 TikTok
+            </a>
+            <span class="social-link cashapp-tag">
+                💵 Cash App: $doctorsickle
+            </span>
+        </div>
+
+        <p class="inquiry-note">
+            For inquiries outside of listed commissions, please send an instagram message to 
+            <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer">@doctorsickle</a>
+        </p>
+    </footer>
+
+    <!-- Direct Instagram DM Request Modal -->
     <div class="modal" id="commissionModal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">&times;</button>
-            <h2 style="color: var(--accent-gold); margin-bottom: 1rem;">Commission Request</h2>
+            <h2 style="color: var(--accent-gold); margin-bottom: 0.5rem;">Request Commission</h2>
             
-            <form action="https://formsubmit.co/dr.torsickle@gmail.com" method="POST">
-                <input type="hidden" name="_subject" value="New Commission Request - Sickle Art Studio">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_captcha" value="false">
+            <div class="selected-tier-box" id="modalCardTitle">
+                <!-- Selected Tier Name displays here -->
+            </div>
 
-                <div class="form-group">
-                    <label>Selected Tier / Artwork</label>
-                    <input type="text" id="modalCardTitle" name="Commission Tier" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Your Name / Handle</label>
-                    <input type="text" name="Client Handle" required placeholder="e.g. @artist_fan">
-                </div>
-                <div class="form-group">
-                    <label>Your Email</label>
-                    <input type="email" name="Client Email" required placeholder="name@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Commission Details</label>
-                    <select name="Commission Type">
-                        <option>Standard Render</option>
-                        <option>Deluxe Render (+ Background)</option>
-                        <option>Commercial Rights Package</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Project Description & References</label>
-                    <textarea name="Project Description" rows="4" required placeholder="Describe character, pose, colors, or paste reference links..."></textarea>
-                </div>
-                <button type="submit" class="btn-gold">Submit Request</button>
-            </form>
+            <p class="modal-instructions">
+                Click below to send a Direct Message to <strong>@doctorsickle</strong> on Instagram. Please specify the tier selected and include your character references!
+            </p>
+
+            <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer" class="btn-ig-dm">
+                💬 Send Direct Message on Instagram
+            </a>
         </div>
     </div>
 
@@ -311,27 +389,42 @@
            ========================================================================== */
 
         // 1. OPTIONAL SITE BACKGROUND IMAGE (Leave empty '' to use dark default)
-        const SITE_BACKGROUND_JPG = ''; 
+        const SITE_BACKGROUND_JPG = 'https://tcgplayer-cdn.tcgplayer.com/product/632504_in_1000x1000.jpg'; 
 
         // 2. YOUR ARTWORK CARDS LIST
-        // Rearrange, add, or edit items in this list to update your webpage.
         const CARDS = [
             {
-                title: 'Character Portrait',
-                category: 'Tier I • Digital',
-                price: '$75',
+                title: 'Nami (Whole Cake Island Arc) - One Piece Promotion Cards (OP-PR)',
+                category: 'Tier I • Traditional B&W',
+                price: '$60',
                 image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80',
                 overlayTitle: 'Portrait Tier',
-                description: 'Fully rendered headshot/bust illustration with custom background colors.'
+                description: 'Fully hand drawn headshot/bust illustration in black and white. Size 9x12'
             },
             {
-                title: 'Full Body Character',
-                category: 'Tier II • Concept Art',
+                title: 'Nami (Whole Cake Island Arc) - One Piece Promotion Cards (OP-PR)',
+                category: 'Tier II • Traditional Full Color',
                 price: '$150',
                 image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
                 overlayTitle: 'Full Body Tier',
-                description: 'Complete full-body character design, weapons/props, and dynamic line art.'
+                description: 'Fully hand drawn headshot/bust illustration in full color. Size 9x12'
             },
+            {
+                title: 'Full Scene / Illustration',
+                category: 'Tier III • Deluxe',
+                price: '$250',
+                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
+                overlayTitle: 'Master Tier',
+                description: 'Detailed character with complex dynamic background, lighting effects, and full polish.'
+            }
+            {
+                title: 'Full Scene / Illustration',
+                category: 'Tier III • Deluxe',
+                price: '$250',
+                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
+                overlayTitle: 'Master Tier',
+                description: 'Detailed character with complex dynamic background, lighting effects, and full polish.'
+            }
             {
                 title: 'Full Scene / Illustration',
                 category: 'Tier III • Deluxe',
@@ -343,11 +436,10 @@
         ];
 
         /* ==========================================================================
-           AUTOMATIC RENDER CODE (No need to touch below this line)
+           AUTOMATIC RENDER CODE
            ========================================================================== */
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Set Background Image if provided
             if (SITE_BACKGROUND_JPG.trim() !== '') {
                 document.documentElement.style.setProperty(
                     '--bg-image', 
@@ -355,7 +447,6 @@
                 );
             }
 
-            // Build Card Grid
             const grid = document.getElementById('cardGrid');
             grid.innerHTML = '';
 
@@ -384,7 +475,7 @@
         });
 
         function openModal(cardTitle) {
-            document.getElementById('modalCardTitle').value = cardTitle;
+            document.getElementById('modalCardTitle').innerText = cardTitle;
             document.getElementById('commissionModal').style.display = 'flex';
         }
 

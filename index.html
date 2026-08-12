@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Card Art Commissions</title>
+  <style>
+    /* Global Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      font-size: 2.2rem;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+    header p {
+      color: #94a3b8;
+      font-size: 1rem;
+    }
+
+    /* Card Grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    /* Individual Card Option */
+    .card-option {
+      position: relative;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      aspect-ratio: 2.5 / 3.5; /* Trading card aspect ratio */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .card-option:hover {
+      transform: translateY(-5px);
+      border-color: #38bdf8;
+      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.3);
+    }
+
+    .card-option.selected {
+      border-color: #4ade80;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+    }
+
+    /* Background Preview Area */
+    .card-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: 1;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .card-option:hover .card-bg {
+      opacity: 0.3; /* Dims image on hover to make text overlay readable */
+    }
+
+    /* Standard Card Label */
+    .card-info {
+      position: relative;
+      z-index: 2;
+      padding: 15px;
+      background: linear-gradient(0deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 70%, rgba(15,23,42,0) 100%);
+      width: 100%;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #ffffff;
+    }
+
+    .card-subtitle {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    /* Hover Pricing Overlay */
+    .price-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      background: rgba(15, 23, 42, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .card-option:hover .price-overlay {
+      opacity: 1;
+    }
+
+    .price-tag {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #4ade80;
+      margin-bottom: 8px;
+    }
+
+    .price-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    /* Selected Badge */
+    .selected-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 4;
+      background: #4ade80;
+      color: #0f172a;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 20px;
+      display: none;
+    }
+
+    .card-option.selected .selected-badge {
+      display: block;
+    }
+
+    /* Summary Bar */
+    .summary-panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .summary-text h3 {
+      font-size: 1.1rem;
+      color: #f8fafc;
+    }
+
+    .summary-text p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .order-btn {
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 700;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .order-btn:hover {
+      background: #7dd3fc;
+    }
+
+    .order-btn.disabled {
+      background: #475569;
+      color: #94a3b8;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Custom Card Art Commissions</h1>
+      <p>Hover over a tier to view estimated pricing. Click to select your package!</p>
+    </header>
+
+    <!-- Interactive Card Grid -->
+    <div class="card-grid">
+      
+      <!-- Option 1 -->
+      <div class="card-option" data-tier="Tier 1: Card Focal Point" data-price="$100">
+        <div class="selected-badge">SELECTED</div>
+        <div class="card-bg" style="background-color: #334155;"></div>
+        <div class="card-info">
+          <div class="card-title">Focal Point</div>
+          <div class="card-subtitle">Main Subject + Simple BG</div>
+        </div>
+        <div class="price-overlay">
+          <div class="price-tag">$100</div>
+          <div class="price-desc">Full-color main character/monster with simple or blurred background effects. High-res digital output.</div>
+        </div>
+      </div>
+
+      <!-- Option 2 -->
+      <div class="card-option" data-tier="Tier 2: Full-Art Expansion" data-price="$180">
+        <div class="selected-badge">SELECTED</div>
+        <div class="card-bg" style="background-color: #1e3a8a;"></div>
+        <div class="card-info">
+          <div class="card-title">Full-Art Expansion</div>
+          <div class="card-subtitle">Detailed Character + Environment</div>
+        </div>
+        <div class="price-overlay">
+          <div class="price-tag">$180</div>
+          <div class="price-desc">Fully expanded artwork beyond the frame with custom background details and lighting.</div>
+        </div>
+      </div>
+
+      <!-- Option 3 -->
+      <div class="card-option" data-tier="Tier 3: Playmat / Banner Edition" data-price="$250">
+        <div class="selected-badge">SELECTED</div>
+        <div class="card-bg" style="background-color: #581c87;"></div>
+        <div class="card-info">
+          <div class="card-title">Playmat / Banner</div>
+          <div class="card-subtitle">Wide Aspect + High Detail</div>
+        </div>
+        <div class="price-overlay">
+          <div class="price-tag">$250</div>
+          <div class="price-desc">Custom wide-format layout sized for desktop playmats or high-dpi physical wall prints.</div>
+        </div>
+      </div>
+
+      <!-- Option 4 -->
+      <div class="card-option" data-tier="Tier 4: Deluxe Masterpiece" data-price="$350">
+        <div class="selected-badge">SELECTED</div>
+        <div class="card-bg" style="background-color: #701a75;"></div>
+        <div class="card-info">
+          <div class="card-title">Deluxe Masterpiece</div>
+          <div class="card-subtitle">Multi-Subject / Full Scene</div>
+        </div>
+        <div class="price-overlay">
+          <div class="price-tag">$350+</div>
+          <div class="price-desc">Complex composition, multiple characters, dynamic effects, source PSD, and process timelapse video.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Live Order Summary Panel -->
+    <div class="summary-panel">
+      <div class="summary-text">
+        <h3 id="selected-title">No Tier Selected</h3>
+        <p id="selected-details">Click a card tier above to choose your commission type.</p>
+      </div>
+      <!-- Replace the href with your Google Form, VGen, or social media link -->
+      <a href="#" id="order-button" class="order-btn disabled">Select a Package</a>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript Logic
+    const cardOptions = document.querySelectorAll('.card-option');
+    const selectedTitle = document.getElementById('selected-title');
+    const selectedDetails = document.getElementById('selected-details');
+    const orderButton = document.getElementById('order-button');
+
+    // Link where you want clients to send their order details (Google Form, VGen, Ko-fi, or Twitter DM)
+    const COMMISSION_LINK = "https://forms.google.com"; // Replace with your actual form link
+
+    cardOptions.forEach(card => {
+      card.addEventListener('click', () => {
+        // Clear previous selection
+        cardOptions.forEach(c => c.classList.remove('selected'));
+
+        // Highlight clicked card
+        card.classList.add('selected');
+
+        // Extract dataset info
+        const tier = card.getAttribute('data-tier');
+        const price = card.getAttribute('data-price');
+
+        // Update Summary Bar Text
+        selectedTitle.textContent = `${tier} — ${price}`;
+        selectedDetails.textContent = `Package selected. Click the button to request your slot.`;
+
+        // Enable Order Button
+        orderButton.classList.remove('disabled');
+        orderButton.textContent = `Request ${tier} Slot`;
+        orderButton.href = `${COMMISSION_LINK}?tier=${encodeURIComponent(tier)}`;
+      });
+    });
+  </script>
+</body>
+</html>

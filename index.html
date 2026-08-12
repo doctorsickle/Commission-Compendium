@@ -35,13 +35,11 @@
             flex-direction: column;
             align-items: center;
             padding: 2rem 1rem;
-            transition: background 0.5s ease;
         }
 
         header {
             text-align: center;
             margin-bottom: 2.5rem;
-            position: relative;
             width: 100%;
             max-width: 1200px;
         }
@@ -62,84 +60,6 @@
             margin-top: 0.5rem;
             font-size: 1.15rem;
             letter-spacing: 1px;
-        }
-
-        .admin-controls {
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 0.7rem 1.4rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px var(--accent-violet-glow);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, #f59e0b, #b45309);
-            color: #0f0f13;
-            box-shadow: 0 4px 15px var(--accent-gold-glow);
-        }
-
-        .btn-gold:hover {
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
-        }
-
-        .btn-outline {
-            background: rgba(15, 12, 25, 0.8);
-            border: 1px solid var(--accent-gold);
-            color: var(--accent-gold);
-        }
-
-        /* Admin Controls Overlay on Cards */
-        .admin-actions {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 20;
-            display: none;
-            gap: 6px;
-        }
-
-        body.admin-active .admin-actions {
-            display: flex;
-        }
-
-        .admin-btn {
-            background: rgba(13, 11, 20, 0.9);
-            border: 1px solid var(--accent-gold);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s ease;
-        }
-
-        .admin-btn-delete {
-            border-color: #f43f5e;
-            color: #fda4af;
-        }
-
-        .admin-btn:hover {
-            transform: scale(1.08);
         }
 
         /* Card Grid Layout */
@@ -164,7 +84,7 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, box-shadow 0.4s ease, opacity 0.2s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, box-shadow 0.4s ease;
             cursor: pointer;
         }
 
@@ -172,22 +92,6 @@
             transform: translateY(-12px) scale(1.03);
             border-color: var(--accent-gold);
             box-shadow: 0 20px 40px var(--accent-gold-glow), 0 0 25px rgba(245, 158, 11, 0.2);
-        }
-
-        /* Drag and Drop Admin Styles */
-        body.admin-active .trading-card {
-            cursor: grab;
-        }
-
-        body.admin-active .trading-card:active {
-            cursor: grabbing;
-        }
-
-        .trading-card.dragging {
-            opacity: 0.4;
-            transform: scale(0.95);
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 25px var(--accent-gold-glow);
         }
 
         .card-image-slot {
@@ -337,25 +241,16 @@
             font-size: 0.95rem;
         }
 
-        .form-group input:focus, 
-        .form-group select:focus, 
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 10px var(--accent-gold-glow);
-        }
-
-        .admin-banner {
-            display: none;
-            background: rgba(109, 40, 217, 0.25);
-            border: 1px solid var(--accent-violet);
-            backdrop-filter: blur(10px);
-            padding: 0.85rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            text-align: center;
+        .btn-gold {
+            background: linear-gradient(135deg, #f59e0b, #b45309);
+            color: #0f0f13;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
             width: 100%;
-            max-width: 1200px;
+            box-shadow: 0 4px 15px var(--accent-gold-glow);
         }
     </style>
 </head>
@@ -364,66 +259,16 @@
     <header>
         <h1>Sickle Art Studio</h1>
         <p class="subtitle">Collectible Art & Commission Cards</p>
-        
-        <div class="admin-controls">
-            <button class="btn" id="loginBtn" onclick="toggleAdmin()">Admin Login</button>
-            <button class="btn btn-outline" id="bgBtn" style="display:none;" onclick="openBgModal()">🖼️ Edit Site Background</button>
-            <button class="btn btn-gold" id="addCardBtn" style="display:none;" onclick="openAddModal()">+ Add New Card</button>
-        </div>
     </header>
 
-    <div class="admin-banner" id="adminBanner">
-        🔒 <strong>Admin Mode Active:</strong> Click and drag cards to reorder them, hover to <strong>Edit</strong> or <strong>Delete</strong>, or change the <strong>Site Background</strong>.
-    </div>
-
     <main class="card-grid" id="cardGrid">
-        <!-- Trading Card 1 -->
-        <div class="trading-card" onclick="openCommissionModal(this)">
-            <div class="admin-actions">
-                <button class="admin-btn" onclick="openEditModal(event, this.closest('.trading-card'))">✏️ Edit</button>
-                <button class="admin-btn admin-btn-delete" onclick="deleteCard(event, this.closest('.trading-card'))">🗑️ Delete</button>
-            </div>
-            <div class="card-image-slot" style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80');"></div>
-            <div class="card-info">
-                <div>
-                    <div class="card-category">Tier I • Digital</div>
-                    <div class="card-title">Character Portrait</div>
-                </div>
-            </div>
-            <div class="tier-overlay">
-                <div class="tier-title">Portrait Tier</div>
-                <div class="tier-price">$75</div>
-                <div class="tier-desc">Fully rendered headshot/bust illustration with custom background colors.</div>
-                <div class="click-hint">Click to Request</div>
-            </div>
-        </div>
-
-        <!-- Trading Card 2 -->
-        <div class="trading-card" onclick="openCommissionModal(this)">
-            <div class="admin-actions">
-                <button class="admin-btn" onclick="openEditModal(event, this.closest('.trading-card'))">✏️ Edit</button>
-                <button class="admin-btn admin-btn-delete" onclick="deleteCard(event, this.closest('.trading-card'))">🗑️ Delete</button>
-            </div>
-            <div class="card-image-slot" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80');"></div>
-            <div class="card-info">
-                <div>
-                    <div class="card-category">Tier II • Concept Art</div>
-                    <div class="card-title">Full Body Character</div>
-                </div>
-            </div>
-            <div class="tier-overlay">
-                <div class="tier-title">Full Body Tier</div>
-                <div class="tier-price">$150</div>
-                <div class="tier-desc">Complete full-body character design, weapons/props, and dynamic line art.</div>
-                <div class="click-hint">Click to Request</div>
-            </div>
-        </div>
+        <!-- Cards will automatically generate here from the list below -->
     </main>
 
-    <!-- Commission Request Modal (Sends directly to dr.torsickle@gmail.com) -->
+    <!-- Commission Request Modal -->
     <div class="modal" id="commissionModal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('commissionModal')">&times;</button>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
             <h2 style="color: var(--accent-gold); margin-bottom: 1rem;">Commission Request</h2>
             
             <form action="https://formsubmit.co/dr.torsickle@gmail.com" method="POST">
@@ -455,267 +300,96 @@
                     <label>Project Description & References</label>
                     <textarea name="Project Description" rows="4" required placeholder="Describe character, pose, colors, or paste reference links..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-gold" style="width:100%;">Submit Request</button>
+                <button type="submit" class="btn-gold">Submit Request</button>
             </form>
         </div>
     </div>
 
-    <!-- Admin Add/Edit Card Modal -->
-    <div class="modal" id="editCardModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('editCardModal')">&times;</button>
-            <h2 style="color: var(--accent-violet); margin-bottom: 1rem;" id="modalHeaderTitle">Add / Edit Card</h2>
-            <div class="form-group">
-                <label>Card Title</label>
-                <input type="text" id="editTitle" placeholder="e.g., Anime Splash Art">
-            </div>
-            <div class="form-group">
-                <label>Category Label</label>
-                <input type="text" id="editCategory" placeholder="e.g., Tier III • Full Scene">
-            </div>
-            <div class="form-group">
-                <label>Image URL (Plug your artwork photo link here)</label>
-                <input type="text" id="editImage" placeholder="https://...">
-            </div>
-            <div class="form-group">
-                <label>Tier Overlay Title</label>
-                <input type="text" id="editTierTitle" placeholder="e.g., Master Tier">
-            </div>
-            <div class="form-group">
-                <label>Price</label>
-                <input type="text" id="editPrice" placeholder="e.g., $250">
-            </div>
-            <div class="form-group">
-                <label>Tier Description</label>
-                <textarea id="editDesc" rows="3" placeholder="Description of what this tier includes..."></textarea>
-            </div>
-            <button class="btn btn-gold" style="width:100%;" onclick="saveCard()">Save Card to Grid</button>
-        </div>
-    </div>
-
-    <!-- Admin Edit Page Background Modal -->
-    <div class="modal" id="bgModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('bgModal')">&times;</button>
-            <h2 style="color: var(--accent-gold); margin-bottom: 1rem;">Edit Website Background</h2>
-            <div class="form-group">
-                <label>Background Image URL (Paste artwork link)</label>
-                <input type="text" id="bgImageInput" placeholder="https://your-art-image-url.jpg">
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.2rem;">
-                Tip: Direct links ending in .jpg or .png work best. Leave blank to restore default dark violet gradient.
-            </p>
-            <button class="btn btn-gold" style="width:100%;" onclick="applyBackground()">Apply Background</button>
-        </div>
-    </div>
-
     <script>
-        let isAdmin = false;
-        let currentEditingCard = null;
+        /* ==========================================================================
+           EASY EDIT SECTION (Swap links, text, prices, and images here!)
+           ========================================================================== */
 
-        // Enable or Disable Drag and Drop
-        function updateDragAndDrop() {
-            const cards = document.querySelectorAll('.trading-card');
-            cards.forEach(card => {
-                if (isAdmin) {
-                    card.setAttribute('draggable', 'true');
-                    card.addEventListener('dragstart', handleDragStart);
-                    card.addEventListener('dragend', handleDragEnd);
-                } else {
-                    card.removeAttribute('draggable');
-                    card.removeEventListener('dragstart', handleDragStart);
-                    card.removeEventListener('dragend', handleDragEnd);
-                }
-            });
-        }
+        // 1. OPTIONAL SITE BACKGROUND IMAGE (Leave empty '' to use dark default)
+        const SITE_BACKGROUND_JPG = ''; 
 
-        // Toggle Admin Mode
-        function toggleAdmin() {
-            if (!isAdmin) {
-                const password = prompt("Enter Admin Passcode:");
-                if (password === "sickle2026") {
-                    isAdmin = true;
-                    document.body.classList.add('admin-active');
-                    document.getElementById('adminBanner').style.display = 'block';
-                    document.getElementById('addCardBtn').style.display = 'inline-block';
-                    document.getElementById('bgBtn').style.display = 'inline-block';
-                    document.getElementById('loginBtn').innerText = 'Lock Admin';
-                    updateDragAndDrop();
-                    alert("Admin Mode unlocked! You can now drag cards to reorder them.");
-                } else if (password !== null) {
-                    alert("Incorrect passcode.");
-                }
-            } else {
-                isAdmin = false;
-                document.body.classList.remove('admin-active');
-                document.getElementById('adminBanner').style.display = 'none';
-                document.getElementById('addCardBtn').style.display = 'none';
-                document.getElementById('bgBtn').style.display = 'none';
-                document.getElementById('loginBtn').innerText = 'Admin Login';
-                updateDragAndDrop();
+        // 2. YOUR ARTWORK CARDS LIST
+        // Rearrange, add, or edit items in this list to update your webpage.
+        const CARDS = [
+            {
+                title: 'Character Portrait',
+                category: 'Tier I • Digital',
+                price: '$75',
+                image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80',
+                overlayTitle: 'Portrait Tier',
+                description: 'Fully rendered headshot/bust illustration with custom background colors.'
+            },
+            {
+                title: 'Full Body Character',
+                category: 'Tier II • Concept Art',
+                price: '$150',
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
+                overlayTitle: 'Full Body Tier',
+                description: 'Complete full-body character design, weapons/props, and dynamic line art.'
+            },
+            {
+                title: 'Full Scene / Illustration',
+                category: 'Tier III • Deluxe',
+                price: '$250',
+                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
+                overlayTitle: 'Master Tier',
+                description: 'Detailed character with complex dynamic background, lighting effects, and full polish.'
             }
-        }
+        ];
 
-        // Drag & Drop Handlers
-        let draggedCard = null;
+        /* ==========================================================================
+           AUTOMATIC RENDER CODE (No need to touch below this line)
+           ========================================================================== */
 
-        function handleDragStart(e) {
-            draggedCard = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            draggedCard = null;
-        }
-
-        const cardGrid = document.getElementById('cardGrid');
-
-        cardGrid.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            if (!isAdmin || !draggedCard) return;
-
-            e.dataTransfer.dropEffect = 'move';
-            const afterElement = getDragAfterElement(cardGrid, e.clientX, e.clientY);
-            if (afterElement == null) {
-                cardGrid.appendChild(draggedCard);
-            } else {
-                cardGrid.insertBefore(draggedCard, afterElement);
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set Background Image if provided
+            if (SITE_BACKGROUND_JPG.trim() !== '') {
+                document.documentElement.style.setProperty(
+                    '--bg-image', 
+                    `linear-gradient(rgba(10, 8, 16, 0.75), rgba(10, 8, 16, 0.85)), url('${SITE_BACKGROUND_JPG}')`
+                );
             }
-        });
 
-        function getDragAfterElement(container, x, y) {
-            const draggableElements = [...container.querySelectorAll('.trading-card:not(.dragging)')];
+            // Build Card Grid
+            const grid = document.getElementById('cardGrid');
+            grid.innerHTML = '';
 
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offsetX = x - box.left - box.width / 2;
-                const offsetY = y - box.top - box.height / 2;
-                const distance = Math.hypot(offsetX, offsetY);
-
-                if (distance < closest.distance) {
-                    return { distance: distance, element: child };
-                } else {
-                    return closest;
-                }
-            }, { distance: Number.POSITIVE_INFINITY }).element;
-        }
-
-        // Background Customization
-        function openBgModal() {
-            document.getElementById('bgModal').style.display = 'flex';
-        }
-
-        function applyBackground() {
-            const url = document.getElementById('bgImageInput').value.trim();
-            if (url) {
-                document.documentElement.style.setProperty('--bg-image', `linear-gradient(rgba(10, 8, 16, 0.75), rgba(10, 8, 16, 0.85)), url('${url}')`);
-            } else {
-                document.documentElement.style.setProperty('--bg-image', 'radial-gradient(circle at 50% 20%, #1a162b 0%, #0d0b14 70%, #050408 100%)');
-            }
-            closeModal('bgModal');
-        }
-
-        // Open Commission Form Modal
-        function openCommissionModal(cardElement) {
-            if (event.target.closest('.admin-actions') || cardElement.classList.contains('dragging')) return;
-
-            const title = cardElement.querySelector('.card-title').innerText;
-            const price = cardElement.querySelector('.tier-price').innerText;
-            document.getElementById('modalCardTitle').value = `${title} (${price})`;
-            document.getElementById('commissionModal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Admin: Add New Card
-        function openAddModal() {
-            currentEditingCard = null;
-            document.getElementById('modalHeaderTitle').innerText = "Add New Card";
-            document.getElementById('editTitle').value = '';
-            document.getElementById('editCategory').value = '';
-            document.getElementById('editImage').value = '';
-            document.getElementById('editTierTitle').value = '';
-            document.getElementById('editPrice').value = '';
-            document.getElementById('editDesc').value = '';
-            document.getElementById('editCardModal').style.display = 'flex';
-        }
-
-        // Admin: Edit Existing Card
-        function openEditModal(event, cardElement) {
-            event.stopPropagation();
-            currentEditingCard = cardElement;
-            document.getElementById('modalHeaderTitle').innerText = "Edit Card";
-
-            const bgImg = cardElement.querySelector('.card-image-slot').style.backgroundImage;
-            const imgUrl = bgImg.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
-
-            document.getElementById('editTitle').value = cardElement.querySelector('.card-title').innerText;
-            document.getElementById('editCategory').value = cardElement.querySelector('.card-category').innerText;
-            document.getElementById('editImage').value = imgUrl;
-            document.getElementById('editTierTitle').value = cardElement.querySelector('.tier-title').innerText;
-            document.getElementById('editPrice').value = cardElement.querySelector('.tier-price').innerText;
-            document.getElementById('editDesc').value = cardElement.querySelector('.tier-desc').innerText;
-
-            document.getElementById('editCardModal').style.display = 'flex';
-        }
-
-        // Admin: Delete Card
-        function deleteCard(event, cardElement) {
-            event.stopPropagation();
-            if (confirm("Are you sure you want to delete this card?")) {
-                cardElement.remove();
-            }
-        }
-
-        // Save Card Changes
-        function saveCard() {
-            const title = document.getElementById('editTitle').value || 'New Artwork';
-            const category = document.getElementById('editCategory').value || 'Tier I';
-            const imgUrl = document.getElementById('editImage').value || 'https://via.placeholder.com/600x800';
-            const tierTitle = document.getElementById('editTierTitle').value || 'Custom Tier';
-            const price = document.getElementById('editPrice').value || '$100';
-            const desc = document.getElementById('editDesc').value || 'Commission details here...';
-
-            if (currentEditingCard) {
-                currentEditingCard.querySelector('.card-title').innerText = title;
-                currentEditingCard.querySelector('.card-category').innerText = category;
-                currentEditingCard.querySelector('.card-image-slot').style.backgroundImage = `url('${imgUrl}')`;
-                currentEditingCard.querySelector('.tier-title').innerText = tierTitle;
-                currentEditingCard.querySelector('.tier-price').innerText = price;
-                currentEditingCard.querySelector('.tier-desc').innerText = desc;
-            } else {
-                const cardGrid = document.getElementById('cardGrid');
+            CARDS.forEach(card => {
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'trading-card';
-                cardDiv.onclick = function() { openCommissionModal(this); };
+                cardDiv.onclick = () => openModal(`${card.title} (${card.price})`);
+
                 cardDiv.innerHTML = `
-                    <div class="admin-actions">
-                        <button class="admin-btn" onclick="openEditModal(event, this.closest('.trading-card'))">✏️ Edit</button>
-                        <button class="admin-btn admin-btn-delete" onclick="deleteCard(event, this.closest('.trading-card'))">🗑️ Delete</button>
-                    </div>
-                    <div class="card-image-slot" style="background-image: url('${imgUrl}');"></div>
+                    <div class="card-image-slot" style="background-image: url('${card.image}');"></div>
                     <div class="card-info">
                         <div>
-                            <div class="card-category">${category}</div>
-                            <div class="card-title">${title}</div>
+                            <div class="card-category">${card.category}</div>
+                            <div class="card-title">${card.title}</div>
                         </div>
                     </div>
                     <div class="tier-overlay">
-                        <div class="tier-title">${tierTitle}</div>
-                        <div class="tier-price">${price}</div>
-                        <div class="tier-desc">${desc}</div>
+                        <div class="tier-title">${card.overlayTitle}</div>
+                        <div class="tier-price">${card.price}</div>
+                        <div class="tier-desc">${card.description}</div>
                         <div class="click-hint">Click to Request</div>
                     </div>
                 `;
-                cardGrid.appendChild(cardDiv);
-                updateDragAndDrop();
-            }
+                grid.appendChild(cardDiv);
+            });
+        });
 
-            closeModal('editCardModal');
+        function openModal(cardTitle) {
+            document.getElementById('modalCardTitle').value = cardTitle;
+            document.getElementById('commissionModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('commissionModal').style.display = 'none';
         }
     </script>
 </body>

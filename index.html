@@ -1,15 +1,400 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sickle Art Studio</title>
+    <style>
+        :root {
+            --bg-image: radial-gradient(circle at 50% 20%, #1a162b 0%, #0d0b14 70%, #050408 100%);
+            --card-bg: rgba(22, 19, 36, 0.85);
+            --card-border: rgba(168, 85, 247, 0.25);
+            --accent-gold: #f59e0b;
+            --accent-gold-glow: rgba(245, 158, 11, 0.4);
+            --accent-violet: #a855f7;
+            --accent-violet-glow: rgba(168, 85, 247, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-image);
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            filter: drop-shadow(0 0 20px var(--accent-gold-glow));
+            font-weight: 900;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+        }
+
+        /* Card Grid Layout */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1200px;
+            padding: 1rem 0;
+        }
+
+        /* Trading Card Styling */
+        .trading-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 2.5 / 3.5;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .trading-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 40px var(--accent-gold-glow), 0 0 25px rgba(245, 158, 11, 0.2);
+        }
+
+        .card-image-slot {
+            width: 100%;
+            height: 65%;
+            background-size: cover;
+            background-position: center;
+            background-color: #0b0914;
+            position: relative;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .card-info {
+            padding: 1.2rem;
+            height: 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(22, 19, 36, 0.4) 0%, rgba(13, 11, 20, 0.9) 100%);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 0.2rem;
+        }
+
+        .card-category {
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        /* Hover Overlay for Commission Tiers */
+        .tier-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(13, 11, 20, 0.94);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+        }
+
+        .trading-card:hover .tier-overlay {
+            opacity: 1;
+        }
+
+        .tier-title {
+            color: var(--accent-gold);
+            font-size: 1.4rem;
+            margin-bottom: 0.4rem;
+            font-weight: 800;
+        }
+
+        .tier-price {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.6rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .tier-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .click-hint {
+            font-size: 0.8rem;
+            color: var(--accent-violet);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(168, 85, 247, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        /* Modal & Form for Commission Orders */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 4, 8, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #120f1f;
+            border: 1px solid var(--accent-violet);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 2.2rem;
+            position: relative;
+            box-shadow: 0 0 40px var(--accent-violet-glow);
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .selected-tier-box {
+            background: #090712;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .modal-instructions {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-ig-dm {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #e1306c, #c13584, #833ab4);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            width: 100%;
+            box-shadow: 0 4px 18px rgba(225, 48, 108, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-ig-dm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(225, 48, 108, 0.6);
+        }
+
+        /* Footer Section */
+        footer {
+            margin-top: 4rem;
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            background: rgba(22, 19, 36, 0.6);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-link:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--accent-gold-glow);
+        }
+
+        .cashapp-tag {
+            color: #00D632;
+            border-color: rgba(0, 214, 50, 0.3);
+        }
+
+        .cashapp-tag:hover {
+            border-color: #00D632;
+            color: #00D632;
+            box-shadow: 0 4px 15px rgba(0, 214, 50, 0.3);
+        }
+
+        .inquiry-note {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .inquiry-note a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .inquiry-note a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Sickle Art Studio</h1>
+        <p class="subtitle">Collectible Art & Commission Cards</p>
+    </header>
+
+    <main class="card-grid" id="cardGrid">
+        <!-- Cards will automatically generate here from the list below -->
+    </main>
+
+    <!-- Footer Section with Links and Note -->
+    <footer>
+        <div class="social-links">
+            <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer" class="social-link">
+                📸 Instagram
+            </a>
+            <a href="https://www.tiktok.com/@doctorsickle" target="_blank" rel="noopener noreferrer" class="social-link">
+                📸 TikTok
+            </a>
+            <span class="social-link cashapp-tag">
+                💵 Cash App: $doctorsickle
+            </span>
+        </div>
+
+        <p class="inquiry-note">
+            For inquiries outside of listed commissions, please send an instagram message to 
+            <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer">@doctorsickle</a>
+        </p>
+    </footer>
+
+    <!-- Direct Instagram DM Request Modal -->
+    <div class="modal" id="commissionModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2 style="color: var(--accent-gold); margin-bottom: 0.5rem;">Request Commission</h2>
+            
+            <div class="selected-tier-box" id="modalCardTitle">
+                <!-- Selected Tier Name displays here -->
+            </div>
+
+            <p class="modal-instructions">
+                Click below to send a Direct Message to <strong>@doctorsickle</strong> on Instagram. Please specify the tier selected and include your character references!
+            </p>
+
+            <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer" class="btn-ig-dm">
+                💬 Send Direct Message on Instagram
+            </a>
+        </div>
+    </div>
+
+    <script>
         /* ==========================================================================
            EASY EDIT SECTION (Swap links, text, prices, and images here!)
            ========================================================================== */
 
-        // 1. OPTIONAL SITE BACKGROUND IMAGE (Leave empty '' to use dark default)
-        const SITE_BACKGROUND_JPG = 'https://tcgplayer-cdn.tcgplayer.com/product/632504_in_1000x1000.jpg'; 
+        // 1. OPTIONAL SITE BACKGROUND IMAGE (Leave empty '' to use dark default gradient)
+        const SITE_BACKGROUND_JPG = ''; 
 
         // 2. YOUR ARTWORK CARDS LIST
         const CARDS = [
             {
-                title: 'Nami (Whole Cake Island Arc) - One Piece Promotion Cards (OP-PR)',
+                title: 'Nami (Whole Cake Island Arc)',
                 category: 'Tier I • Traditional B&W',
                 price: '$60',
                 image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80',
@@ -17,7 +402,7 @@
                 description: 'Fully hand drawn headshot/bust illustration in black and white. Size 9x12'
             },
             {
-                title: 'Nami (Whole Cake Island Arc) - One Piece Promotion Cards (OP-PR)',
+                title: 'Nami (Whole Cake Island Arc)',
                 category: 'Tier II • Traditional Full Color',
                 price: '$150',
                 image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
@@ -98,3 +483,5 @@
             document.getElementById('commissionModal').style.display = 'none';
         }
     </script>
+</body>
+</html>

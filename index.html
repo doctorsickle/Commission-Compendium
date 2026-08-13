@@ -99,6 +99,7 @@
             height: 65%;
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             background-color: #0b0914;
             position: relative;
             border-bottom: 1px solid var(--card-border);
@@ -200,7 +201,7 @@
             border: 1px solid var(--accent-violet);
             border-radius: 20px;
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 2.2rem;
             position: relative;
             box-shadow: 0 0 40px var(--accent-violet-glow);
@@ -223,7 +224,7 @@
             border: 1px solid rgba(168, 85, 247, 0.3);
             border-radius: 12px;
             padding: 1rem;
-            margin: 1.2rem 0;
+            margin: 1rem 0;
             color: var(--accent-gold);
             font-size: 1.2rem;
             font-weight: 800;
@@ -232,8 +233,63 @@
         .modal-instructions {
             color: var(--text-muted);
             font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Copy Text Box & Button */
+        .copy-box-container {
+            margin: 1.2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        #copyTextArea {
+            width: 100%;
+            height: 100px;
+            background: #08060f;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: #f8fafc;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+
+        #copyTextArea:focus {
+            border-color: var(--accent-violet);
+        }
+
+        .btn-copy {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--accent-violet);
+            border: 1px solid var(--accent-violet);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-copy:hover {
+            background: var(--accent-violet);
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-violet-glow);
+        }
+
+        .btn-copy.copied {
+            background: #10b981;
+            border-color: #10b981;
+            color: #fff;
         }
 
         .btn-ig-dm {
@@ -340,10 +396,10 @@
     </header>
 
     <main class="card-grid" id="cardGrid">
-        <!-- Cards will automatically generate here from the list below -->
+        <!-- Cards automatically generate here -->
     </main>
 
-    <!-- Footer Section with Links and Note -->
+    <!-- Footer Section -->
     <footer>
         <div class="social-links">
             <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer" class="social-link">
@@ -374,30 +430,37 @@
             </div>
 
             <p class="modal-instructions">
-                Click below to send a Direct Message to <strong>@doctorsickle</strong> on Instagram. Please specify the tier selected and include your character references!
+                Click <strong>Copy Request Text</strong> below, then paste it in your Direct Message to <strong>@doctorsickle</strong> on Instagram!
             </p>
 
+            <div class="copy-box-container">
+                <textarea id="copyTextArea" readonly></textarea>
+                <button id="copyBtn" onclick="copyRequestText()" class="btn-copy">📋 Copy Request Text</button>
+            </div>
+
             <a href="https://www.instagram.com/doctorsickle/" target="_blank" rel="noopener noreferrer" class="btn-ig-dm">
-                💬 Send Direct Message on Instagram
+                💬 Open Instagram DMs (@doctorsickle)
             </a>
         </div>
     </div>
 
     <script>
         /* ==========================================================================
-           EASY EDIT SECTION (Swap links, text, prices, and images here!)
+           EASY EDIT SECTION
            ========================================================================== */
 
-        // 1. OPTIONAL SITE BACKGROUND IMAGE (Leave empty '' to use dark default gradient)
+        // 1. OPTIONAL SITE BACKGROUND IMAGE (e.g. 'images/background.jpg' or leave '' for default dark gradient)
         const SITE_BACKGROUND_JPG = ''; 
 
         // 2. YOUR ARTWORK CARDS LIST
+        // Place your local image files in an "images" folder next to index.html
+        // e.g., 'images/nami-bw.png', 'images/nami-color.jpg', 'images/deluxe.jpg'
         const CARDS = [
             {
                 title: 'Nami (Whole Cake Island Arc)',
                 category: 'Tier I • Traditional B&W',
                 price: '$60',
-                image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80',
+                image: 'images/nami-bw.jpg',
                 overlayTitle: 'Portrait Tier',
                 description: 'Fully hand drawn headshot/bust illustration in black and white. Size 9x12'
             },
@@ -405,7 +468,7 @@
                 title: 'Nami (Whole Cake Island Arc)',
                 category: 'Tier II • Traditional Full Color',
                 price: '$150',
-                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
+                image: 'images/nami-color.jpg',
                 overlayTitle: 'Full Body Tier',
                 description: 'Fully hand drawn headshot/bust illustration in full color. Size 9x12'
             },
@@ -413,30 +476,14 @@
                 title: 'Full Scene / Illustration',
                 category: 'Tier III • Deluxe',
                 price: '$250',
-                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
-                overlayTitle: 'Master Tier',
-                description: 'Detailed character with complex dynamic background, lighting effects, and full polish.'
-            },
-            {
-                title: 'Full Scene / Illustration',
-                category: 'Tier III • Deluxe',
-                price: '$250',
-                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
-                overlayTitle: 'Master Tier',
-                description: 'Detailed character with complex dynamic background, lighting effects, and full polish.'
-            },
-            {
-                title: 'Full Scene / Illustration',
-                category: 'Tier III • Deluxe',
-                price: '$250',
-                image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
+                image: 'images/deluxe-scene.jpg',
                 overlayTitle: 'Master Tier',
                 description: 'Detailed character with complex dynamic background, lighting effects, and full polish.'
             }
         ];
 
         /* ==========================================================================
-           AUTOMATIC RENDER CODE
+           AUTOMATIC RENDER & MODAL CODE
            ========================================================================== */
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -450,10 +497,10 @@
             const grid = document.getElementById('cardGrid');
             grid.innerHTML = '';
 
-            CARDS.forEach(card => {
+            CARDS.forEach((card) => {
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'trading-card';
-                cardDiv.onclick = () => openModal(`${card.title} (${card.price})`);
+                cardDiv.onclick = () => openModal(card);
 
                 cardDiv.innerHTML = `
                     <div class="card-image-slot" style="background-image: url('${card.image}');"></div>
@@ -474,13 +521,42 @@
             });
         });
 
-        function openModal(cardTitle) {
-            document.getElementById('modalCardTitle').innerText = cardTitle;
+        function openModal(card) {
+            document.getElementById('modalCardTitle').innerText = `${card.title} (${card.price})`;
+            
+            // Generate formatted request text for user to copy
+            const requestTemplate = `Hi @doctorsickle! I would like to request a commission:\n\n• Tier: ${card.category}\n• Title: ${card.title}\n• Price: ${card.price}\n\nHere are my character references & details:`;
+            
+            const textArea = document.getElementById('copyTextArea');
+            textArea.value = requestTemplate;
+
+            // Reset copy button styling when opening modal
+            const btn = document.getElementById('copyBtn');
+            btn.innerHTML = '📋 Copy Request Text';
+            btn.classList.remove('copied');
+
             document.getElementById('commissionModal').style.display = 'flex';
         }
 
         function closeModal() {
             document.getElementById('commissionModal').style.display = 'none';
+        }
+
+        function copyRequestText() {
+            const textArea = document.getElementById('copyTextArea');
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); // Mobile compatibility
+
+            navigator.clipboard.writeText(textArea.value).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerHTML = '✓ Copied to Clipboard!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '📋 Copy Request Text';
+                    btn.classList.remove('copied');
+                }, 2500);
+            });
         }
     </script>
 </body>
